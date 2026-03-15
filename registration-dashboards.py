@@ -1,33 +1,86 @@
-from tkinter import as Tk
-from tkmacosx import Button 
-root=Tk()
-root.title("Hello World")
+import tkinter as Tk
 
-def login(root):
-    login_frame = Tk.Frame(root)
-    name1_entry = Tk.Entry(login_frame).pack()
-    pw1_entry = Tk.Entry(login_frame).pack()
+root = Tk.Tk()
+root.title("Dashboard")
+root.geometry("300x300")
 
+users = {}
 
-def signup(root):
-    sign_up=Tk.Frame(root)
-    name2_entry = Tk.Entry(sign_up).pack()
-    name_list=name2_entry.get()
-    name_list=[]
-    email_entry=Tk.Entry(sign_up).pack()
-    name_email=email_entry.get()
-    name_list.append(name_email)
-    pw1_entry = Tk.Entry(sign_up).pack()
-    name_pw=email_entry.get()
-    name_list.append(name_pw)
+current_frame = None
 
 
-login_lab = Tk.Button(root, text="LOGIN", command=login).pack()
-signup_lab = Tk.Button(root, text="SIGNUP", command=signup).pack()
+def clear_frame():
+    global current_frame
+    if current_frame:
+        current_frame.destroy()
 
 
+def main_menu():
+    global current_frame
+    clear_frame()
+
+    current_frame = Tk.Frame(root)
+    current_frame.pack()
+
+    Tk.Button(current_frame, text="LOGIN", command=login_page).pack(pady=10)
+    Tk.Button(current_frame, text="SIGN UP", command=signup_page).pack(pady=10)
 
 
+def login_page():
+    global current_frame
+    clear_frame()
+
+    current_frame = Tk.Frame(root)
+    current_frame.pack()
+
+    Tk.Label(current_frame, text="Username").pack()
+    username_entry = Tk.Entry(current_frame)
+    username_entry.pack()
+
+    Tk.Label(current_frame, text="Password").pack()
+    password_entry = Tk.Entry(current_frame, show="*")
+    password_entry.pack()
+
+    def validate():
+        username = username_entry.get()
+        password = password_entry.get()
+
+        if username in users and users[username] == password:
+            Tk.Label(current_frame, text="Login successful").pack()
+        else:
+            Tk.Label(current_frame, text="Invalid login").pack()
+
+    Tk.Button(current_frame, text="Login", command=validate).pack(pady=5)
+    Tk.Button(current_frame, text="Back", command=main_menu).pack()
+
+
+def signup_page():
+    global current_frame
+    clear_frame()
+
+    current_frame = Tk.Frame(root)
+    current_frame.pack()
+
+    Tk.Label(current_frame, text="Create Username").pack()
+    username_entry = Tk.Entry(current_frame)
+    username_entry.pack()
+
+    Tk.Label(current_frame, text="Create Password").pack()
+    password_entry = Tk.Entry(current_frame, show="*")
+    password_entry.pack()
+
+    def create_user():
+        username = username_entry.get()
+        password = password_entry.get()
+
+        users[username] = password
+        Tk.Label(current_frame, text="Account created!").pack()
+
+    Tk.Button(current_frame, text="Create Account", command=create_user).pack(pady=5)
+    Tk.Button(current_frame, text="Back", command=main_menu).pack()
+
+
+main_menu()
 
 root.mainloop()
 
